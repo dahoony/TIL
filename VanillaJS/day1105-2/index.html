@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World</title>
+</head>
+<body>
+    <h1 id="hphk">happy hacking</h1>
+    <div>
+        <a href="#" id='a'>Who said that</a>
+    </div>  
+    <div>
+        <a href="#" id='b'>Said what?</a>
+    </div>
+
+
+    <script>
+        const anchor = document.querySelector('#a');
+        const anchor2 = document.querySelector('#b');
+        const text = document.querySelector('#hphk');
+        
+        anchor.addEventListener('click',() => {
+            text.innerHTML = '리처드 스톨먼';
+        });
+
+        anchor2.addEventListener('click',() => {
+            text.innerHTML = '죽어서 기쁜 건 아니지만 사라져서 기쁘다';
+        });
+    </script>
+</body>
+</html>
