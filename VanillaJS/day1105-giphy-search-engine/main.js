@@ -14,6 +14,10 @@ inputArea.addEventListener('keypress',(event)=>{
 });
 
 // 2. giphy라는 API를 활용하여 data를 받고 가공한다.
+const apiKey = 'pETal56SsBpImEECWh6AcSOUlSZfg7zU';
+const keyword = 'cats';
+const URL = `api.giphy.com/v1/gifs/search?q=${keyword}&api_key=${apiKey}`;
+console.log(URL);
 
 // 3. GIF 파일들을 index.html에 넣는다.
 const pushToDOM = (data)=>{
