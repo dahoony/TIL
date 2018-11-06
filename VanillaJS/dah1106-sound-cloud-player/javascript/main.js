@@ -1,9 +1,9 @@
 const cardList_div = document.querySelector("#card_list");
 const search_text = document.querySelector("#search_text");
 const search_btn = document.querySelector("#search_btn");
+const js_playlist = document.querySelector('#js-playlist');
 
 /* 2. SoundCloud API  사용하기 */
-console.log(SC);
 const SoundCloudAPI = {
   init: () => {
     SC.initialize({
@@ -14,7 +14,6 @@ const SoundCloudAPI = {
     SC.get("/tracks", {
       q: keyword
     }).then(function(tracks) {
-      console.log(tracks);
       SoundCloudAPI.renderTrack(tracks);
     });
   }
@@ -44,8 +43,8 @@ SoundCloudAPI.renderTrack = tracks => {
 
     const img = document.createElement("img");
     img.classList.add("image_img");
-    
-    img.src = (track.artwork_url || 'https://lorempixel.com/290/290/abstract');
+
+    img.src = track.artwork_url || "https://lorempixel.com/290/290/abstract";
     image.appendChild(img);
 
     const content = document.createElement("div");
@@ -74,13 +73,31 @@ SoundCloudAPI.renderTrack = tracks => {
     button_div.appendChild(icon);
     button_div.appendChild(span);
 
+    button_div.addEventListener('click',()=>{
+        SoundCloudAPI.addPlayList(track.permalink_url);
+    });
+
     card.appendChild(image);
     card.appendChild(content);
     card.appendChild(button_div);
-    console.log(card);
+
 
     cardList_div.appendChild(card);
   });
 };
 
 /* 4. Playlist 에 추가하고 실제로 재생하기 */
+SoundCloudAPI.addPlayList = (trackURL) => {
+  SC.oEmbed(trackURL, {
+    auto_play: true
+  }).then(function(embed) {
+    const playboxes = document.querySelectorAll('#playbox');
+    
+
+    const playbox = document.createElement('div');
+    playbox.setAttribute('id','playbox');
+
+    playbox.innerHTML = embed.html;
+    js_playlist.insertBefore(playbox, js_playlist.firstChild);
+  });
+};
