@@ -45,12 +45,7 @@ SoundCloudAPI.renderTrack = tracks => {
     const img = document.createElement("img");
     img.classList.add("image_img");
     
-    if(track.artwork_url === null){
-        img.src = 'https://lorempixel.com/290/290/abstract';
-    }else{
-        img.src = track.artwork_url;
-    }
-    
+    img.src = (track.artwork_url || 'https://lorempixel.com/290/290/abstract');
     image.appendChild(img);
 
     const content = document.createElement("div");
