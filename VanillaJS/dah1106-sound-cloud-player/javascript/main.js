@@ -2,6 +2,9 @@ const cardList_div = document.querySelector("#card_list");
 const search_text = document.querySelector("#search_text");
 const search_btn = document.querySelector("#search_btn");
 const js_playlist = document.querySelector('#js-playlist');
+const reset_btn = document.querySelector('#reset');
+
+js_playlist.innerHTML = localStorage.getItem('playlist');
 
 /* 2. SoundCloud API  사용하기 */
 const SoundCloudAPI = {
@@ -18,6 +21,7 @@ const SoundCloudAPI = {
     });
   }
 };
+
 SoundCloudAPI.init();
 
 /* 검색 */
@@ -91,13 +95,30 @@ SoundCloudAPI.addPlayList = (trackURL) => {
   SC.oEmbed(trackURL, {
     auto_play: true
   }).then(function(embed) {
-    const playboxes = document.querySelectorAll('#playbox');
-    
-
+    // 리스트 추가할 때 같은 거 있으면 제거하고싶음..
+    // const playboxes = document.querySelectorAll('#playbox');
+    // console.log('embed.html ',embed.html);
+    // playboxes.forEach(box => {
+    //     console.log('box ',box.innerHTML);
+    //     //같은것이 리스트에 있을 경우
+    //     if(box.innerHTML === embed.html){
+    //         console.log("있다.!");
+    //         box.removeChild();
+    //     }
+    // });
     const playbox = document.createElement('div');
     playbox.setAttribute('id','playbox');
 
     playbox.innerHTML = embed.html;
     js_playlist.insertBefore(playbox, js_playlist.firstChild);
+
+    //Use local storage
+    localStorage.setItem('playlist', js_playlist.innerHTML);
   });
 };
+
+//local reset
+reset_btn.addEventListener('click',()=>{
+    localStorage.clear();
+    js_playlist.innerHTML = null;
+});
