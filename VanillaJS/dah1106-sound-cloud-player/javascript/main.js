@@ -99,7 +99,7 @@ const SoundCloudAPI = {
     SC.oEmbed(trackURL, {
       auto_play: true
     }).then(function(embed) {
-      // 리스트 추가할 때 같은 거 있으면 제거하고싶음..
+      // 리스트 추가할 때 같은 거 있으면 제거
       const playboxes = document.querySelectorAll('#playbox');
       playboxes.forEach(box => {
           //같은것이 리스트에 있을 경우
