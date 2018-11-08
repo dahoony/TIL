@@ -1,5 +1,5 @@
 const http = require('http');
-const url = 'http://www.nodejs.org';
+const url = 'http://csszengarden.com';
 
 http.get(url,(response) => {
     let chunkCount = 0;
@@ -7,5 +7,9 @@ http.get(url,(response) => {
         chunkCount++;
         console.log('--=-=-=-=-=-=--=-=-=-=-=-=-=-');
         console.log(chunk.toString('utf8'));
+    });
+
+    response.on('end',() =>{
+        console.log(`res 가 ${chunkCount}로 나눠졌어요.`);
     });
 });
