@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
 
+//json으로 알아서 처리하게 해줘야한다.
+app.use(express.json());
+
 const movies = [
   { id: 1, title: "태극기 휘날리며" },
   { id: 2, title: "해리포터" },
@@ -38,7 +41,14 @@ app.get("/api/movies/:id", (req, res) => {
 });
 
 // /** /api/movies/1 CREATE*/
-// app.post();
+app.post('/api/movies',(req,res)=>{
+    const movie = {
+        id:movies.length+1,
+        title:req.body.title
+    };
+    movies.push(movie);
+    res.send(movie);
+});
 
 // /** /api/movies/1 UPDATE*/
 // app.put();
