@@ -11,12 +11,6 @@ const movies = [
   { id: 3, title: "실미도" }
 ];
 
-const schema = {
-    title: Joi.string()
-      .min(3)
-      .required()
-  };
-
 app.get("/", (req, res) => {
   res.send("happy hacking");
 });
@@ -36,21 +30,21 @@ app.get("/api/movies", (req, res) => {
 
 /** /api/movies/1 ONE READ*/
 app.get("/api/movies/:id", (req, res) => {
-  const movieSelect = movies.find(movie => movie.id === parseInt(req.params.id));
+  const movieSelect = getMovie(movies, parseInt(req.params.id));
 
   if (!movieSelect) return res.status(404).send("찾는 영화가 없습니다.");
-  
+
   res.send(movieSelect);
 });
 
 // /** /api/movies/1 CREATE*/
 app.post("/api/movies", (req, res) => {
-  const result = Joi.validate(req.body, schema);
-  // console.log('=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
-  // console.log(result);
-  // console.log('=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+  const { error } = validateMovie(req.body);
+  // const result = validateMovie(req.body).error;
 
-  if (result.error) return res.status(400).send(result.error.message);
+  // const result = validateMovie(req.body);
+
+  if (error) return res.status(400).send(error.message);
 
   const movie = {
     id: movies.length + 1,
@@ -62,13 +56,13 @@ app.post("/api/movies", (req, res) => {
 
 // /** /api/movies/1 UPDATE*/
 app.put("/api/movies/:id", (req, res) => {
-  const result = Joi.validate(req.body, schema);
-
-  if (result.error) return res.status(400).send(result.error.message);
-
-  const movieSelect = movies.find(movie => movie.id === parseInt(req.params.id));
+  const movieSelect = getMovie(movies, parseInt(req.params.id));
 
   if (!movieSelect) return res.status(404).send("찾는 영화가 없습니다.");
+
+  const result = validateMovie(req.body);
+
+  if (result.error) return res.status(400).send(result.error.message);
 
   const movieIndex = movies.indexOf(movieSelect);
   movies[movieIndex].title = result.value.title;
@@ -77,16 +71,33 @@ app.put("/api/movies/:id", (req, res) => {
 
 // /** /api/movies/1 DESTROY*/
 app.delete("/api/movies/:id", (req, res) => {
-  const movieSelect = movies.find(movie => movie.id === parseInt(req.params.id));
+  const movieSelect = getMovie(movies, parseInt(req.params.id));
 
   if (!movieSelect) return res.status(404).send("찾는 영화가 없습니다.");
-  
+
   const movieIndex = movies.indexOf(movieSelect);
   movies.splice(movieIndex, 1);
   res.send(movieSelect);
-  
 });
 
+// schema and validate 설정하는 함수(유효성 검사)
+
+function validateMovie(movie) {
+  const schema = {
+    title: Joi.string()
+      .min(3)
+      .required()
+  };
+
+  return Joi.validate(movie, schema);
+}
+
+// id로 movie를 get하는 함수
+function getMovie(movies, id) {
+  return movies.find(movie => movie.id === id);
+}
+
+//port 설정
 const port = process.env.PORT || 9000;
 
 app.listen(port, () => {
