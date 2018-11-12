@@ -42,7 +42,7 @@ app.get('/api/users',(req,res)=>{
 
 app.get('/api/users/:id',(req,res)=>{
     const id = parseInt(req.params.id);
-    const user = users.find(user => user.id === id);
+    const user = getUser(users,parseInt(id));
     if(!user){
         return res.status(404).send('찾는 회원이 없습니다.');
     }
@@ -52,7 +52,7 @@ app.get('/api/users/:id',(req,res)=>{
 
 app.put('/api/users/:id',(req,res)=>{
     const id = parseInt(req.params.id);
-    const user = users.find(user => user.id === id);
+    const user = getUser(users,parseInt(id));
 
     if(!user){
         return res.status(404).send('찾는 회원이 없습니다.');
@@ -71,7 +71,7 @@ app.put('/api/users/:id',(req,res)=>{
 
 app.delete('/api/users/:id',(req,res)=>{
     const id = req.params.id;
-    const user = users.find(user => user.id === parseInt(id));
+    const user = getUser(users,parseInt(id));
 
     if(!user){
         return res.status(404).send('찾는 회원이 없습니다.');
@@ -80,6 +80,11 @@ app.delete('/api/users/:id',(req,res)=>{
     const userIndex = users.indexOf(user);
     res.send(users.splice(userIndex,1));
 });
+
+// getUser
+function getUser(users, id){
+    return users.find(user => user.id === id);
+}
 
 //port setting
 const port = process.env.PORT || 9000;
