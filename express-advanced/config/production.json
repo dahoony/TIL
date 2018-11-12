@@ -1,0 +1,7 @@
+{
+    "name":"Advenced Express App - PROD",
+    "DB": {
+        "host":"https://192.168.222.233/prod-mail.server",
+        "password":"123"
+    }
+}
