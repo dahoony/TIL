@@ -10,10 +10,24 @@ mongoose.connect('mongodb://localhost/hello-mongo',{useNewUrlParser: true})
 
 
 // 사용가능한 Schema DataType : String, Number, Date, Buffer, Boolean, ObjectID, Array([])
+// String : minlenth, maxlenth, match, enum
+// Number : min, max
+// Date : min,max
+// All : required
 const courseSchema = new mongoose.Schema({
-    name: String,
+    name: { type : String, required:true },
     author: String,
-    tags: [String],
+    tags: {
+        type : Array,
+        // custom Validator
+        validate: {
+            validator: function(v){
+                const result = v.every(tag => tag.length>0);
+                return v && v.length >0 && result;
+            },
+            message: 'A Course should have at least 1 tag'
+        }
+    },
     date: { type : Date, default: Date.now },
     isPublished:Boolean
 })
@@ -27,19 +41,23 @@ const Course = mongoose.model('Course',courseSchema);
 /** Create */
 async function createCourse(){
     const course = new Course({
-        name: '실전 DApp 빌드',
-        author:'john',
-        tags:['Ethereum','EOS','Dapp'],
+        name: '코딩 테스트 가즈아',
+        author:'dahoon',
+        tags:['Java','javascript','api'],
         isPublished:false
     });
     
     try{
+        // const result = await course.validate();
+        // console.log(result);
         const result = await course.save();
         console.log(result);
     }catch(error){
         console.error(error.message);
     }
 }
+
+// createCourse();
 
 /** Read All(get) */
 async function getCourses(){
@@ -84,9 +102,46 @@ async function getCourses(){
   * 
   */
 
-getCourses();
+/** modify */  
+/** 방법 1 */
+async function updateCourse1(id){
+    const course = await Course.findById(id);
+    
+    if(!course) return;
+    
+    //Change
+    course.author = '다훈';
+    course.tags = ['Java','coding'];
+    
+    const result = await course.save();
+
+    console.log(result);
+
+}
+/** 방법 2 직접 Update => result */
+
+async function updateCourse(id){
+    const result = await Course.updateMany({isPublished:false},{
+        $set:{
+            author:'dada',
+        }
+    });
+
+    // const result = await Course.findByIdAndUpdate(id,{
+    //     $set:{
+    //         author:'multicampus',
+    //     }
+    // });
+    console.log(result);
+}
 
 
+// updateCourse('5bea638d1736e951e82d15c3');
 
+/** Destory function */
+async function removeCourse(id){
+    const result = await Course.deleteOne({_id:id});
+    console.log(result);
+}
 
-
+removeCourse('5beb7b3d40a4d05098282765');
