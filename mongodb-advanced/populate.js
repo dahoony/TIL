@@ -41,7 +41,7 @@ async function createAuthor(name, github){
 }
 
 async function createCourse(name, author){
-    const course = new Course(name,author);
+    const course = new Course({name,author});
     try{
         const result = await course.save();
         console.log(result);
@@ -50,5 +50,17 @@ async function createCourse(name, author){
     }
 }
 
-createAuthor('최다훈','github.com');
-// createCourse('coding',)
+// createAuthor('최다훈','github.com');
+// createCourse('React', '5beb8a8d7c36c15208f899f5');
+
+/** Read */
+async function listCourses(){
+    const courses = await Course
+        .find()
+        .populate('author')
+        .select('name');
+
+    console.log(courses);
+}
+
+listCourses();
