@@ -1,11 +1,12 @@
 const { Movie, validateMovie } = require('../models/movie');
+const {Genre} = require('../models/genre');
 const express = require('express');
 const router = express.Router();
 
 /** Server */
 
 router.get('/', async (req, res) => {
-    const movies = await Movie.find().sort('name');
+    const movies = await Movie.find().sort('title');
 
     res.send(movies);
 });
@@ -22,7 +23,15 @@ router.post('/', async (req, res) => {
 
     if (error) return res.status(400).send(error.message);
 
-    let movie = new Movie({ title: req.body.title, mainActor: req.body.mainActor });
+    //genre를 찾아온다.
+    const genre = await Genre.findById(req.body.genreId);
+
+    if(!genre) return res.status(400).send('Not Found GenreId');
+
+    let movie = new Movie({ title: req.body.title, mainActor: req.body.mainActor,genre:{
+        _id:genre._id,
+        name:genre.name
+    } });
 
     try {
         movie = await movie.save();
