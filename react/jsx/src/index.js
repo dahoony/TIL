@@ -14,7 +14,7 @@ import ReactDOM from 'react-dom';
 
 const App = () => {
     const buttonText = {happy:'hacking'}
-    const time = new Date().toLocaleTimeString();
+    const time = new Date().toLocaleTimeString();new Date()
     return (
         <div>
             <h3>{time}</h3>
